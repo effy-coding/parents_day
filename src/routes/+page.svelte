@@ -9,6 +9,10 @@
 			a: ''
 		},
 		{
+			q: '여행을 갈 때 가장 선호하는 여행 스타일은 어떤 거야? (예: 휴양지, 도시 탐방, 자연 탐험 등)',
+			a: ''
+		},
+		{
 			q: '가장 좋아하는 색깔은 뭐야?',
 			a: ''
 		},
@@ -18,6 +22,10 @@
 		},
 		{
 			q: '가장 좋아하는 음악 장르랑 아티스트는 누구야?',
+			a: ''
+		},
+		{
+			q: '최근에 감명 깊게 본 영화나 도서 있어?',
 			a: ''
 		},
 		{
@@ -56,6 +64,13 @@
 		}
 	}
 
+	function reset() {
+		currentQuestion = 0;
+		questions.forEach((item) => {
+			item.a = '';
+		});
+	}
+
 	function generateShareableLink() {
 		const params = new URLSearchParams();
 		questions.forEach((item, index) => {
@@ -88,15 +103,33 @@
 	});
 </script>
 
+<p
+	class="bg-primary-400 p-2 rounded-md mb-4 text-xl font-extrabold leading-none tracking-tight text-center"
+>
+	엄마, 아빠는 뭐 좋아해?
+</p>
+
 <div
 	class="h-full p-6 border-black border-2 rounded-md shadow-[8px_8px_0px_rgba(0,0,0,1)] bg-white"
 >
-	<p class="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900">
-		엄마, 아빠는 뭐 좋아해?
-	</p>
-
-	<p class="mb-6 font-normal text-gray-700">가정의 달을 맞아 우리 엄마 아빠 취향을 알아보고 싶어</p>
-
+	{#if currentQuestion < questions.length}
+		<p class="mb-6 font-normal text-gray-700">
+			가정의 달을 맞아 우리 엄마 아빠 취향을 알아보고 싶어
+		</p>
+	{:else}
+		<p class="mb-6 font-normal text-gray-700">우리 부모님이 남겨주신 취향들을 확인해보세요</p>
+		<svg
+			class="mx-auto w-4 h-4 mb-4 text-gray-400"
+			aria-hidden="true"
+			xmlns="http://www.w3.org/2000/svg"
+			fill="currentColor"
+			viewBox="0 0 18 14"
+		>
+			<path
+				d="M6 0H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4v1a3 3 0 0 1-3 3H2a1 1 0 0 0 0 2h1a5.006 5.006 0 0 0 5-5V2a2 2 0 0 0-2-2Zm10 0h-4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4v1a3 3 0 0 1-3 3h-1a1 1 0 0 0 0 2h1a5.006 5.006 0 0 0 5-5V2a2 2 0 0 0-2-2Z"
+			/>
+		</svg>
+	{/if}
 	<article class="w-full h-full">
 		<div>
 			<p class="line-clamp-4">
@@ -106,17 +139,22 @@
 							<p class="mb-4 text-sm text-gray-500">
 								{indexString[currentQuestion]} 질문
 							</p>
-							<svg
-								class="mx-auto w-4 h-4 text-gray-400"
-								aria-hidden="true"
-								xmlns="http://www.w3.org/2000/svg"
-								fill="currentColor"
-								viewBox="0 0 18 14"
-							>
-								<path
-									d="M6 0H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4v1a3 3 0 0 1-3 3H2a1 1 0 0 0 0 2h1a5.006 5.006 0 0 0 5-5V2a2 2 0 0 0-2-2Zm10 0h-4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4v1a3 3 0 0 1-3 3h-1a1 1 0 0 0 0 2h1a5.006 5.006 0 0 0 5-5V2a2 2 0 0 0-2-2Z"
-								/>
-							</svg>
+							<div class="inline-flex items-center justify-center w-full">
+								<hr class="w-64 h-1 my-8 bg-gray-200 border-0 rounded" />
+								<div class="absolute px-4 -translate-x-1/2 bg-white left-1/2">
+									<svg
+										class="w-4 h-4 text-gray-400"
+										aria-hidden="true"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="currentColor"
+										viewBox="0 0 18 14"
+									>
+										<path
+											d="M6 0H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4v1a3 3 0 0 1-3 3H2a1 1 0 0 0 0 2h1a5.006 5.006 0 0 0 5-5V2a2 2 0 0 0-2-2Zm10 0h-4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4v1a3 3 0 0 1-3 3h-1a1 1 0 0 0 0 2h1a5.006 5.006 0 0 0 5-5V2a2 2 0 0 0-2-2Z"
+										/>
+									</svg>
+								</div>
+							</div>
 							<p class="text-lg">{questions[currentQuestion].q}</p>
 						</blockquote>
 						<input
@@ -151,15 +189,23 @@
 					<div class="flex flex-col">
 						<ul>
 							{#each questions as q}
-								<li class="text-gray-700">{q.q}</li>
+								<li class="text-sm text-gray-700">{q.q}</li>
 								<li class="text-lg mb-3">{q.a}</li>
 							{/each}
 						</ul>
+						<hr class="w-48 h-1 mx-auto bg-gray-200 border-0 rounded mb-8" />
+
 						<button
 							on:click={generateShareableLink}
-							class="bg-primary-400 h-12 w-full border-black border-2 p-2.5 transition duration-300 ease-in-out hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] rounded-md"
+							class="bg-primary-500 h-12 w-full border-black border-2 p-2.5 transition duration-300 ease-in-out hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] rounded-md"
 						>
 							자녀들에게 공유하기
+						</button>
+						<button
+							on:click={reset}
+							class="mt-4 bg-primary-400 h-12 w-full border-black border-2 p-2.5 transition duration-300 ease-in-out hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] rounded-md"
+						>
+							처음으로
 						</button>
 					</div>
 				{/if}
