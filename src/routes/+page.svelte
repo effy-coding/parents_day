@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import LZ from 'lz-string';
 	import { onMount } from 'svelte';
 
@@ -22,7 +23,7 @@
 			a: ''
 		},
 		{
-			q: '가장 좋아하는 음악 장르랑 아티스트는 누구야?',
+			q: '가장 좋아하는 음악 장르랑 아티스트는 누구야? (예: 팝, 클래식, 힙합, 락 등)',
 			a: ''
 		},
 		{
@@ -31,6 +32,22 @@
 		},
 		{
 			q: '앞으로 시도해보고 싶은 취미나 활동 있어?',
+			a: ''
+		},
+		{
+			q: '가장 기억에 남는 여행지는 어디야? 이유는 뭐야?',
+			a: ''
+		},
+		{
+			q: '오늘 저녁 메뉴로 먹고 싶은 음식은 뭐야?',
+			a: ''
+		},
+		{
+			q: '가장 좋아하는 계절은 뭐야? 이유는?',
+			a: ''
+		},
+		{
+			q: '꼭 가보고 싶은 콘서트 있어?',
 			a: ''
 		}
 	];
@@ -45,7 +62,12 @@
 		'일곱 번째',
 		'여덟 번째',
 		'아홉 번째',
-		'열 번째'
+		'열 번째',
+		'열한 번째',
+		'열두 번째',
+		'열세 번째',
+		'열네 번째',
+		'열다섯 번째'
 	];
 
 	function handlePrevious() {
@@ -67,6 +89,7 @@
 
 	function reset() {
 		currentQuestion = 0;
+		goto('/');
 		questions.forEach((item) => {
 			item.a = '';
 		});
@@ -144,7 +167,7 @@
 					<div class="flex flex-col items-center justify-center text-center">
 						<blockquote class="font-semibold text-gray-900">
 							<p class="mb-4 text-sm text-gray-500">
-								{indexString[currentQuestion]} 질문
+								{indexString[currentQuestion]} 질문 / {questions.length}
 							</p>
 							<div class="inline-flex items-center justify-center w-full">
 								<hr class="w-64 h-1 my-8 bg-gray-200 border-0 rounded" />
