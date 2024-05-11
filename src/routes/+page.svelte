@@ -1,21 +1,30 @@
 <script lang="ts">
 	let currentQuestion = 0;
-	let currentQuestionIndex = 0;
 
-	let questions = [
-		'평소에 가장 선호하시는 색깔은 무엇인가요?',
-		'집안에서 가장 좋아하는 공간은 어디이며, 그 이유는 무엇인가요?',
-		'평소에 가장 많이 사용하시는 물건이나 액세서리는 무엇인가요?',
-		'평소에 읽으시는 책이나 잡지의 장르는 어떤 것인가요?',
-		'향수나 방향제 등 향기 제품을 사용하신다면 선호하는 향은 무엇인가요?',
-		'음악을 들으실 때 가장 좋아하는 음악 장르나 아티스트는 누구인가요?',
-		'최근에 관심 있어하시는 취미나 활동이 있으신가요?',
-		'앞으로 시도해보고 싶은 취미나 체험은 무엇인가요?',
-		'개인적인 시간을 보낼 때 가장 선호하는 음료나 간식은 무엇인가요?',
-		'평소에 스트레스를 해소하는 방법이나 좋아하는 휴식 방식은 무엇인가요?'
+	const questions = [
+		{
+			q: '평소에 즐겨 읽는 책의 장르가 뭐야?',
+			a: ''
+		},
+		{
+			q: '가장 좋아하는 색깔은 뭐야?',
+			a: ''
+		},
+		{
+			q: '향수나 방향제 같은거 살때 어떤 향을 좋아해?',
+			a: ''
+		},
+		{
+			q: '가장 좋아하는 음악 장르랑 아티스트는 누구야?',
+			a: ''
+		},
+		{
+			q: '앞으로 시도해보고 싶은 취미나 활동 있어?',
+			a: ''
+		}
 	];
 
-	let indexString = [
+	const indexString = [
 		'첫 번째',
 		'두 번째',
 		'세 번째',
@@ -28,10 +37,11 @@
 		'열 번째'
 	];
 
-	let answers = [];
+	function handlePrevious() {
+		currentQuestion--;
+	}
 
-	function handleNext(answer: string) {
-		answers.push(answer);
+	function handleNext() {
 		currentQuestion++;
 	}
 </script>
@@ -39,43 +49,67 @@
 <div
 	class="h-full p-6 border-black border-2 rounded-md shadow-[8px_8px_0px_rgba(0,0,0,1)] bg-white"
 >
-	<p class="mt-2 text-2xl sm:text-4xl font-bold tracking-tight text-gray-900">
+	<p class="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900">
 		엄마, 아빠는 뭐 좋아해?
 	</p>
 
-	<p class="mb-4">가정의 달을 맞아 우리 엄마 아빠 취향을 알아보고 싶어</p>
+	<p class="mb-6 font-normal text-gray-700">가정의 달을 맞아 우리 엄마 아빠 취향을 알아보고 싶어</p>
 
 	<article class="w-full h-full">
-		<div class="text-left h-full">
-			<p class="mb-4 line-clamp-4">
+		<div>
+			<p class="line-clamp-4">
 				{#if currentQuestion < questions.length}
-					<div>
-						<h2>{questions[currentQuestion]}</h2>
-
+					<div class="flex flex-col items-center justify-center text-center">
+						<blockquote class="font-semibold text-gray-900">
+							<p class="mb-4 text-sm text-gray-500">
+								{indexString[currentQuestion]} 질문
+							</p>
+							<svg
+								class="mx-auto w-4 h-4 text-gray-400"
+								aria-hidden="true"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="currentColor"
+								viewBox="0 0 18 14"
+							>
+								<path
+									d="M6 0H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4v1a3 3 0 0 1-3 3H2a1 1 0 0 0 0 2h1a5.006 5.006 0 0 0 5-5V2a2 2 0 0 0-2-2Zm10 0h-4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h4v1a3 3 0 0 1-3 3h-1a1 1 0 0 0 0 2h1a5.006 5.006 0 0 0 5-5V2a2 2 0 0 0-2-2Z"
+								/>
+							</svg>
+							<p class="text-lg">{questions[currentQuestion].q}</p>
+						</blockquote>
 						<input
 							type="text"
-							class="mt-2 w-full border-black border-2 p-2.5 focus:outline-none focus:shadow-[2px_2px_0px_rgba(0,0,0,1)] focus:bg-[#FFA6F6] active:shadow-[2px_2px_0px_rgba(0,0,0,1)] rounded-md"
+							bind:value={questions[currentQuestion].a}
+							class="mt-4 w-full text-center border-black border-2 p-2.5 focus:outline-none focus:shadow-[2px_2px_0px_rgba(0,0,0,1)] focus:bg-primary-400 active:shadow-[2px_2px_0px_rgba(0,0,0,1)] rounded-md"
 							placeholder="..."
-							on:keydown={(e) => e.key === 'Enter' && handleNext(e.target.value)}
+							on:keydown={(e) => e.key === 'Enter' && handleNext()}
 						/>
 					</div>
+					<div class="mt-8 flex justify-between">
+						<button
+							class="h-12 w-1/3 border-black border-2 p-2.5 transition duration-300 ease-in-out bg-white hover:bg-primary-400 hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] rounded-md"
+							on:click={handlePrevious}
+						>
+							이전
+						</button>
+						<button
+							class="h-12 w-1/3 border-black border-2 p-2.5 transition duration-300 ease-in-out bg-primary-500 hover:bg-primary-400 hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] rounded-md"
+							on:click={handleNext}
+						>
+							다음
+						</button>
+					</div>
 				{:else}
-					<div>
-						<h2>모든 질문에 답변해주셔서 감사합니다!</h2>
-						<p>답변 내용:</p>
+					<div class="flex">
 						<ul>
-							{#each answers as answer, index}
-								<li>{index + 1}: {answer}</li>
+							{#each questions as q}
+								<li class="text-gray-700">{q.q}</li>
+								<li class="text-lg mb-3">{q.a}</li>
 							{/each}
 						</ul>
 					</div>
 				{/if}
 			</p>
-			<button
-				class="h-12 w-1/3 border-black border-2 p-2.5 bg-primary-500 hover:bg-[#79F7FF] hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] active:bg-primary-400 rounded-md"
-			>
-				다음
-			</button>
 		</div>
 	</article>
 </div>
