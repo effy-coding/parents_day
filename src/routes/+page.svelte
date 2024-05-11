@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	let currentQuestion = 0;
 
 	const questions = [
@@ -39,11 +41,51 @@
 
 	function handlePrevious() {
 		currentQuestion--;
+		// Focus on answer input auto
+		setTimeout(() => {
+			document.getElementById('answer')?.focus();
+		}, 0);
 	}
 
 	function handleNext() {
-		currentQuestion++;
+		if (questions[currentQuestion].a) {
+			currentQuestion++;
+			setTimeout(() => {
+				document.getElementById('answer')?.focus();
+			}, 0);
+		}
 	}
+
+	function generateShareableLink() {
+		const params = new URLSearchParams();
+		questions.forEach((item, index) => {
+			params.append(`q${index + 1}`, encodeURIComponent(item.a));
+		});
+
+		const url = `${window.location.href}?${params.toString()}`;
+		console.log(url);
+		return url;
+	}
+
+	function loadAnswersFromURL() {
+		const params = new URLSearchParams(window.location.search);
+		let allAnswersLoaded = true;
+		questions.forEach((item, index) => {
+			const answer = params.get(`q${index + 1}`);
+			if (answer) {
+				item.a = decodeURIComponent(answer);
+			} else {
+				allAnswersLoaded = false;
+			}
+		});
+		if (allAnswersLoaded) {
+			currentQuestion = questions.length; // 이제 결과 페이지로 바로 이동
+		}
+	}
+
+	onMount(() => {
+		loadAnswersFromURL();
+	});
 </script>
 
 <div
@@ -78,35 +120,47 @@
 							<p class="text-lg">{questions[currentQuestion].q}</p>
 						</blockquote>
 						<input
+							id="answer"
 							type="text"
 							bind:value={questions[currentQuestion].a}
-							class="mt-4 w-full text-center border-black border-2 p-2.5 focus:outline-none focus:shadow-[2px_2px_0px_rgba(0,0,0,1)] focus:bg-primary-400 active:shadow-[2px_2px_0px_rgba(0,0,0,1)] rounded-md"
+							class="mt-4 w-full text-center border-black border-2 p-2.5 transition duration-300 focus:outline-none focus:shadow-[2px_2px_0px_rgba(0,0,0,1)] focus:bg-primary-500 active:shadow-[2px_2px_0px_rgba(0,0,0,1)] rounded-md"
 							placeholder="..."
 							on:keydown={(e) => e.key === 'Enter' && handleNext()}
 						/>
 					</div>
 					<div class="mt-8 flex justify-between">
+						{#if currentQuestion > 0}
+							<button
+								class="h-12 w-1/3 border-black border-2 p-2.5 transition duration-300 ease-in-out bg-white hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] rounded-md"
+								on:click={handlePrevious}
+							>
+								이전
+							</button>
+						{:else}
+							<div></div>
+						{/if}
 						<button
-							class="h-12 w-1/3 border-black border-2 p-2.5 transition duration-300 ease-in-out bg-white hover:bg-primary-400 hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] rounded-md"
-							on:click={handlePrevious}
-						>
-							이전
-						</button>
-						<button
-							class="h-12 w-1/3 border-black border-2 p-2.5 transition duration-300 ease-in-out bg-primary-500 hover:bg-primary-400 hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] rounded-md"
+							class:bg-primary-400={questions[currentQuestion].a}
+							class="h-12 w-1/3 border-black border-2 p-2.5 transition duration-300 ease-in-out hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] rounded-md"
 							on:click={handleNext}
 						>
 							다음
 						</button>
 					</div>
 				{:else}
-					<div class="flex">
+					<div class="flex flex-col">
 						<ul>
 							{#each questions as q}
 								<li class="text-gray-700">{q.q}</li>
 								<li class="text-lg mb-3">{q.a}</li>
 							{/each}
 						</ul>
+						<button
+							on:click={generateShareableLink}
+							class="bg-primary-400 h-12 w-full border-black border-2 p-2.5 transition duration-300 ease-in-out hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] rounded-md"
+						>
+							자녀들에게 공유하기
+						</button>
 					</div>
 				{/if}
 			</p>
