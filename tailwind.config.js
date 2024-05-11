@@ -2,6 +2,9 @@
 export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
+		fontFamily: {
+			sans: ['GowunDodum', 'ui-sans-serif', 'system-ui']
+		},
 		extend: {
 			colors: {
 				primary: {
