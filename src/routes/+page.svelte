@@ -163,7 +163,6 @@
 							bind:value={questions[currentQuestion].a}
 							class="mt-4 w-full text-center border-black border-2 p-2.5 transition duration-300 focus:outline-none focus:shadow-[2px_2px_0px_rgba(0,0,0,1)] focus:bg-primary-500 active:shadow-[2px_2px_0px_rgba(0,0,0,1)] rounded-md"
 							placeholder="..."
-							on:keydown={(e) => e.key === 'Enter' && handleNext()}
 						/>
 					</div>
 					<div class="mt-8 flex justify-between">
