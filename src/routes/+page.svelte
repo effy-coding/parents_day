@@ -79,6 +79,11 @@
 
 		const url = `${window.location.href}?${params.toString()}`;
 		console.log(url);
+		window.navigator.share({
+			title: '엄마, 아빠는 뭐 좋아해?',
+			text: '우리 부모님이 남겨주신 취향들을 확인해보세요',
+			url
+		});
 		return url;
 	}
 
