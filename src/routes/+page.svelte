@@ -137,7 +137,7 @@
 	{/if}
 	<article class="w-full h-full">
 		<div>
-			<p class="line-clamp-4">
+			<p>
 				{#if currentQuestion < questions.length}
 					<div class="flex flex-col items-center justify-center text-center">
 						<blockquote class="font-semibold text-gray-900">
@@ -191,10 +191,10 @@
 					</div>
 				{:else}
 					<div class="flex flex-col">
-						<ul>
+						<ul class="break-words">
 							{#each questions as q}
-								<li class="text-sm text-gray-700">{q.q}</li>
-								<li class="text-lg mb-3">{q.a}</li>
+								<li class=" text-sm text-gray-700">{q.q}</li>
+								<li class=" text-lg mb-3">{q.a}</li>
 							{/each}
 						</ul>
 						<hr class="w-48 h-1 mx-auto bg-gray-200 border-0 rounded mb-8" />
