@@ -1,11 +1,12 @@
 <script lang="ts">
+	import LZ from 'lz-string';
 	import { onMount } from 'svelte';
 
 	let currentQuestion = 0;
 
 	const questions = [
 		{
-			q: '평소에 즐겨 읽는 책의 장르가 뭐야?',
+			q: '평소에 즐겨 읽는 책의 장르가 뭐야? (예: 소설, 산문, 자기계발서)',
 			a: ''
 		},
 		{
@@ -72,12 +73,9 @@
 	}
 
 	function generateShareableLink() {
-		const params = new URLSearchParams();
-		questions.forEach((item, index) => {
-			params.append(`q${index + 1}`, encodeURIComponent(item.a));
-		});
-
-		const url = `${window.location.href}?${params.toString()}`;
+		const answers = questions.map((q) => q.a);
+		const compressedData = LZ.compressToEncodedURIComponent(JSON.stringify(answers));
+		const url = `${window.location.origin}${window.location.pathname}?data=${compressedData}`;
 		console.log(url);
 		window.navigator.share({
 			title: '엄마, 아빠는 뭐 좋아해?',
@@ -87,19 +85,18 @@
 		return url;
 	}
 
+	// URL에서 데이터를 불러와 해제
 	function loadAnswersFromURL() {
 		const params = new URLSearchParams(window.location.search);
-		let allAnswersLoaded = true;
-		questions.forEach((item, index) => {
-			const answer = params.get(`q${index + 1}`);
-			if (answer) {
-				item.a = decodeURIComponent(answer);
-			} else {
-				allAnswersLoaded = false;
-			}
-		});
-		if (allAnswersLoaded) {
-			currentQuestion = questions.length; // 이제 결과 페이지로 바로 이동
+		const compressedData = params.get('data');
+		if (compressedData) {
+			const answers = JSON.parse(LZ.decompressFromEncodedURIComponent(compressedData));
+			answers.forEach((answer: string, index: number) => {
+				if (answer) {
+					questions[index].a = answer;
+				}
+			});
+			currentQuestion = questions.length; // 결과 페이지로 바로 이동
 		}
 	}
 
