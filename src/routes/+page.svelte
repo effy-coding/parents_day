@@ -76,13 +76,18 @@
 		const answers = questions.map((q) => q.a);
 		const compressedData = LZ.compressToEncodedURIComponent(JSON.stringify(answers));
 		const url = `${window.location.origin}${window.location.pathname}?data=${compressedData}`;
-		console.log(url);
-		window.navigator.share({
-			title: '엄마, 아빠는 뭐 좋아해?',
-			text: '우리 부모님이 남겨주신 취향들을 확인해보세요',
-			url
-		});
-		return url;
+
+		// Share the URL
+		if (window.navigator.share) {
+			window.navigator.share({
+				title: '엄마, 아빠는 뭐 좋아해?',
+				text: '우리 부모님이 남겨주신 취향들을 확인해보세요',
+				url
+			});
+		} else {
+			navigator.clipboard.writeText(url);
+			alert('공유 가능한 링크가 복사되었습니다 😸');
+		}
 	}
 
 	// URL에서 데이터를 불러와 해제
